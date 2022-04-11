@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Components/Home";
-import Editor from "./Components/Editor";
 
 import "./App.css";
 
@@ -22,10 +20,7 @@ function App() {
     return (
         <div className="App container-fluid">
             <Router>
-                <Routes>
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/editor" element={<Editor />} />
-                </Routes>
+                <Routes></Routes>
             </Router>
         </div>
     );
