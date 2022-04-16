@@ -1,9 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import { Provider } from "react-redux";
 
 // Components
 import Editor from "./Components/Editor";
+
+// store
+import store from "./redux/store";
 
 // Socket
 import { io } from "socket.io-client";
@@ -20,13 +24,15 @@ function App() {
         console.log(socket.id);
     });
     return (
-        <div className="App container-fluid">
-            <Router>
-                <Routes>
-                    <Route path="/editor" element={<Editor />} />
-                </Routes>
-            </Router>
-        </div>
+        <Provider store={store}>
+            <div className="App">
+                <Router>
+                    <Routes>
+                        <Route path="/editor" element={<Editor />} />
+                    </Routes>
+                </Router>
+            </div>
+        </Provider>
     );
 }
 

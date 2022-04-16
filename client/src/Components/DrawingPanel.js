@@ -1,17 +1,23 @@
 import React, { useRef, useState, useEffect } from "react";
-
+import store from "../redux/store";
+import { useSelector } from "react-redux";
 const DrawingPanel = () => {
     // refs
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
 
+    const selectedColor = useSelector((state) => state.editor.color);
+
+    console.log("selected color", selectedColor);
+
     // states
     const [isDrawing, setIsDrawing] = useState(false);
     const [lineWidth, setLineWidth] = useState(5);
-    const [lineColor, setLineColor] = useState("black");
+    const [lineColor, setLineColor] = useState(selectedColor);
     const [lineOpacity, setLineOpacity] = useState(0.1);
 
     useEffect(() => {
+        setLineColor(selectedColor);
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
         ctx.lineCap = "round";
@@ -20,7 +26,7 @@ const DrawingPanel = () => {
         ctx.strokeStyle = lineColor;
         ctx.lineWidth = lineWidth;
         ctxRef.current = ctx;
-    }, [lineColor, lineOpacity, lineWidth]);
+    }, [lineColor, lineOpacity, lineWidth, selectedColor]);
 
     // Methods
     const startDrawing = (e) => {
@@ -39,7 +45,7 @@ const DrawingPanel = () => {
     };
 
     return (
-        <div className="drawing-panel">
+        <div className="drawing-panel border m-4 bg-white">
             <canvas
                 ref={canvasRef}
                 onMouseDown={startDrawing}
