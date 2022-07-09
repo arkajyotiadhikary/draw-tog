@@ -1,25 +1,28 @@
 const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
-
-const port = process.env.PORT || 8000;
-// const index = require("./routes/index");
-
 const app = express();
-
+const path = require("path");
+const http = require("http");
 const server = http.createServer(app);
-
-const io = socketIo(server);
-
-io.on("connection", (socket) => {
-    socket.on("connect_error", (err) => {
-        console.log(`connect_error due to ${err.message}`);
-    });
-    console.log("New client connected");
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-        clearInterval(interval);
-    });
+const socket = require("socket.io");
+// const cors = require("cors");
+const io = socket(server, {
+    cors: {
+        origin: "https://localhost:8080",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true,
+    },
 });
 
-server.listen(port, () => console.log(`Listening on port ${port}`));
+const buildPath = path.join(__dirname, "..", "build");
+app.use(express.static(buildPath));
+
+// app.use(cors());
+
+const onConnection = (socket) => {
+    socket.on("drawing", (data) => socket.broadcast.emit("drawing", data));
+};
+io.on("connection", onConnection);
+
+const port = process.env.PORT || 8080;
+server.listen(port, () => console.log(`server is running on port ${port}`));

@@ -4,6 +4,9 @@ import "../Styles/Board.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEraser } from "@fortawesome/free-solid-svg-icons";
 
+// logo
+import logo from "./image/coollogo_com-149942598.png";
+
 const Board = () => {
     const canvasRef = useRef(null);
     const colorsRef = useRef(null);
@@ -132,7 +135,7 @@ const Board = () => {
             );
         };
 
-        socketRef.current = io.connect("http://localhost:8080", {
+        socketRef.current = io.connect("/", {
             transports: ["websocket"],
             withCredentials: true,
             extraHeaders: {
@@ -144,6 +147,17 @@ const Board = () => {
 
     return (
         <div>
+            <img
+                className="logo disabled"
+                src={logo}
+                alt="logo"
+                style={{
+                    position: "absolute",
+                    zIndex: 10,
+                    height: "5rem",
+                    margin: "2rem",
+                }}
+            />
             <canvas ref={canvasRef} className="whiteboard" />
 
             <div
@@ -158,6 +172,7 @@ const Board = () => {
                     <div className="color yellow" />
                     <div className="color white d-flex align-items-center justify-content-center">
                         <FontAwesomeIcon
+                            className="disabled"
                             icon={faEraser}
                             style={{ height: "1.5rem" }}
                         />
