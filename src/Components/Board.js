@@ -135,13 +135,7 @@ const Board = () => {
             );
         };
 
-        socketRef.current = io.connect("/", {
-            transports: ["websocket"],
-            withCredentials: true,
-            extraHeaders: {
-                "my-custom-header": "abcd",
-            },
-        });
+        socketRef.current = io.connect();
         socketRef.current.on("drawing", onDrawingEvent);
     }, []);
 
