@@ -1,6 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import io from "socket.io-client";
 import "../Styles/Board.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEraser } from "@fortawesome/free-solid-svg-icons";
+
+// logo
+import logo from "./image/coollogo_com-149942598.png";
 
 const Board = () => {
     const canvasRef = useRef(null);
@@ -11,10 +16,7 @@ const Board = () => {
         const canvas = canvasRef.current;
         const test = colorsRef.current;
         const context = canvas.getContext("2d");
-
         const colors = document.getElementsByClassName("color");
-        console.log(colors, "the colors");
-        console.log(test);
         const current = {
             color: "black",
         };
@@ -33,7 +35,9 @@ const Board = () => {
             context.moveTo(x0, y0);
             context.lineTo(x1, y1);
             context.strokeStyle = color;
-            context.lineWidth = 2;
+            current.color !== "white"
+                ? (context.lineWidth = 2)
+                : (context.lineWidth = 4);
             context.stroke();
             context.closePath();
 
@@ -131,7 +135,7 @@ const Board = () => {
             );
         };
 
-        socketRef.current = io.connect("http://localhost:8080", {
+        socketRef.current = io.connect("/", {
             transports: ["websocket"],
             withCredentials: true,
             extraHeaders: {
@@ -143,14 +147,37 @@ const Board = () => {
 
     return (
         <div>
+            <img
+                className="logo disabled"
+                src={logo}
+                alt="logo"
+                style={{
+                    position: "absolute",
+                    zIndex: 10,
+                    height: "5rem",
+                    margin: "2rem",
+                }}
+            />
             <canvas ref={canvasRef} className="whiteboard" />
 
-            <div ref={colorsRef} className="colors">
-                <div className="color black" />
-                <div className="color red" />
-                <div className="color green" />
-                <div className="color blue" />
-                <div className="color yellow" />
+            <div
+                ref={colorsRef}
+                className="colors d-flex align-items-end justify-content-center"
+            >
+                <div className="color-holder d-flex justify-content-center">
+                    <div className="color black" />
+                    <div className="color red" />
+                    <div className="color green" />
+                    <div className="color blue" />
+                    <div className="color yellow" />
+                    <div className="color white d-flex align-items-center justify-content-center">
+                        <FontAwesomeIcon
+                            className="disabled"
+                            icon={faEraser}
+                            style={{ height: "1.5rem" }}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );
