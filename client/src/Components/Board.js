@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import io from "socket.io-client";
 import "../Styles/Board.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,9 +11,6 @@ const Board = () => {
     const canvasRef = useRef(null);
     const colorsRef = useRef(null);
     const socketRef = useRef();
-
-    const [room, setRoom] = useState("username");
-    const [foundRoom, setFoundRoom] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -56,7 +53,6 @@ const Board = () => {
                 x1: x1 / w,
                 y1: y1 / h,
                 color,
-                room,
             });
         };
 
@@ -139,7 +135,7 @@ const Board = () => {
             );
         };
 
-        socketRef.current = io.connect(`http://localhost:8080/${room}`, {
+        socketRef.current = io.connect("/", {
             transports: ["websocket"],
             withCredentials: true,
             extraHeaders: {
@@ -162,33 +158,27 @@ const Board = () => {
                     margin: "2rem",
                 }}
             />
-            {room !== "" ? (
-                <div>
-                    <canvas ref={canvasRef} className="whiteboard" />
+            <canvas ref={canvasRef} className="whiteboard" />
 
-                    <div
-                        ref={colorsRef}
-                        className="colors d-flex align-items-end justify-content-center"
-                    >
-                        <div className="color-holder d-flex justify-content-center">
-                            <div className="color black" />
-                            <div className="color red" />
-                            <div className="color green" />
-                            <div className="color blue" />
-                            <div className="color yellow" />
-                            <div className="color white d-flex align-items-center justify-content-center">
-                                <FontAwesomeIcon
-                                    className="disabled"
-                                    icon={faEraser}
-                                    style={{ height: "1.5rem" }}
-                                />
-                            </div>
-                        </div>
+            <div
+                ref={colorsRef}
+                className="colors d-flex align-items-end justify-content-center"
+            >
+                <div className="color-holder d-flex justify-content-center">
+                    <div className="color black" />
+                    <div className="color red" />
+                    <div className="color green" />
+                    <div className="color blue" />
+                    <div className="color yellow" />
+                    <div className="color white d-flex align-items-center justify-content-center">
+                        <FontAwesomeIcon
+                            className="disabled"
+                            icon={faEraser}
+                            style={{ height: "1.5rem" }}
+                        />
                     </div>
                 </div>
-            ) : (
-                <canvas ref={canvasRef} className="whiteboard disabled" />
-            )}
+            </div>
         </div>
     );
 };
